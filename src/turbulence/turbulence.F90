@@ -3025,7 +3025,7 @@
 ! !IROUTINE: Handle convection for first-order TKE schemes using a mass flux formalism\label{sec:convec}
 !
 ! !INTERFACE:
-   subroutine do_massflux(nlev,dt,umean,vmean,Tmean,Smean,Rmean,h)
+   subroutine do_massflux(nlev,dt,umean,vmean,Tmean,Smean,Rmean,h,z,zi,gravity)
 !
 ! !DESCRIPTION:
 ! Based on user input, this routine calls the appropriate routines for
@@ -3048,6 +3048,9 @@
    REALTYPE, intent(in)                :: Smean(0:nlev)
    REALTYPE, intent(in)                :: Rmean(0:nlev)
    REALTYPE, intent(in)                :: h(0:nlev)
+   REALTYPE, intent(in)                :: z(0:nlev)
+   REALTYPE, intent(in)                :: zi(0:nlev)
+   REALTYPE, intent(in)                :: gravity
 !
 ! !REVISION HISTORY:
 !  Original author(s): Florian Lemarié 
@@ -3055,7 +3058,7 @@
 !EOP
 !-----------------------------------------------------------------------
 !BOC
-   call massfluxeq(nlev,dt,umean,vmean,tmean,smean,Rmean,h)
+   call massfluxeq(nlev,dt,umean,vmean,tmean,smean,Rmean,h,z,zi,gravity)
    if( massflux_energy ) call tke_transport_mf(nlev,umean,vmean,h)
    return
  end subroutine do_massflux

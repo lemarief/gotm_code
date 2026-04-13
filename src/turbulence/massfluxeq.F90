@@ -5,7 +5,7 @@
 ! !ROUTINE: The convective plume nonlinear ODEs \label{sec:massfluxeq}
 !
 ! !INTERFACE:
-   subroutine massfluxeq(nlev,dt,u,v,T,S,rho,h)
+   subroutine massfluxeq(nlev,dt,u,v,T,S,rho,h,z,zi,gravity)
 
 ! !DESCRIPTION:
 ! This subroutine solves a set of nonlinear ODEs to determine 
@@ -30,7 +30,6 @@
    use turbulence,  only: mf_ap0,mf_wp0,mf_Cent,mf_Cdet, mf_d0
    use turbulence,  only: mf_aa,mf_bb,mf_bp,mf_uv,mf_dbkg
    use turbulence,  only: mf_zinv, Bmf, massflux_energy, mf_nsub
-   use meanflow,    only: gravity, z, zi
    use density,     only: rho0, get_rho 
 !   
    IMPLICIT NONE
@@ -54,6 +53,12 @@
 
 !  layer thickness (m)
    REALTYPE, intent(in)                :: h(0:nlev)
+
+!  center and interface positions
+   REALTYPE, intent(in)                :: z(0:nlev), zi(0:nlev)
+
+!
+   REALTYPE, intent(in)                :: gravity
 
 ! !REVISION HISTORY:
 !  Original author(s): Florian Lemarié 
