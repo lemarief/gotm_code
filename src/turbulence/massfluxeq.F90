@@ -5,7 +5,7 @@
 ! !ROUTINE: The convective plume nonlinear ODEs \label{sec:massfluxeq}
 !
 ! !INTERFACE:
-   subroutine massfluxeq(nlev,dt,u,v,T,S,rho,h)
+   subroutine massfluxeq(nlev,dt,u,v,T,S,rho,h,z,zi,gravity)
 
 ! !DESCRIPTION:
 ! This subroutine solves a set of nonlinear ODEs to determine 
@@ -30,7 +30,6 @@
    use turbulence,  only: mf_ap0,mf_wp0,mf_Cent,mf_Cdet, mf_d0
    use turbulence,  only: mf_aa,mf_bb,mf_bp,mf_uv,mf_dbkg
    use turbulence,  only: mf_zinv, Bmf, massflux_energy, mf_nsub
-   use meanflow,    only: gravity, z, zi
    use density,     only: rho0, get_rho 
 !   
    IMPLICIT NONE
@@ -54,6 +53,12 @@
 
 !  layer thickness (m)
    REALTYPE, intent(in)                :: h(0:nlev)
+
+!  center and interface positions
+   REALTYPE, intent(in)                :: z(0:nlev), zi(0:nlev)
+
+!
+   REALTYPE, intent(in)                :: gravity
 
 ! !REVISION HISTORY:
 !  Original author(s): Florian Lemarié 
@@ -295,7 +300,7 @@
    use turbulence,   only: tke,tkeo,tke_p,k_min,eps
    use turbulence,   only: mf_Cent,mf_Cdet, mf_d0, mf_nsub
 !
-!   IMPLICIT NONE
+   IMPLICIT NONE
 !
 ! !INPUT PARAMETERS:
 !
@@ -317,6 +322,7 @@
    REALTYPE, parameter       :: wp_min  = 0.5E-08 ! min value for plume velocity
    REALTYPE                  :: dt_sub, tke_star(0:nlev) 
    REALTYPE                  :: ap,dissp,kpp,kpm,dwp,k_env,d0,rhs,FC(0:nlev)
+   REALTYPE                  :: hEnt, hDet
    integer                   :: i,isub
 !
 !------------------------------------------------------------------------
@@ -347,7 +353,7 @@
       rhs     = rhs + hEnt*normVp(i)-ap*dissp
       kpm     = kpp - rhs 
       !
-      if( a_p(i-1)>0. .and. w_p(i-1) < -wpmin ) then 
+      if( a_p(i-1)>0. .and. w_p(i-1) < -wp_min ) then
          tke_p(i-1)  = MAX( kpm/(a_p(i-1)*w_p(i-1)), k_min )
       else 
          tke_p(i-1)  = k_min

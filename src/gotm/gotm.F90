@@ -855,7 +855,7 @@
 !GSW
    if(compute_massflux) then
       call do_density(nlev,S,T,-z,-zi)
-      call do_massflux     ( nlev,dt,u,v,T,S,rho,h )             ! compute mass flux quantities from the meanflow variables
+      call do_massflux     ( nlev,dt,u,v,T,S,rho,h,z,zi,gravity )             ! compute mass flux quantities from the meanflow variables
       call uvTSequation_mf( nlev,dt,Fmass,u_p,v_p,T_p,S_p,Pmf,mf_nsub,massflux_on_dynamics, massflux_energy ) ! add the mass flux term to the meanflow equation 
    endif 
    
